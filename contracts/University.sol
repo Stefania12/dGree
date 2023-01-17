@@ -9,11 +9,11 @@ contract University {
 
     UniversityDiplomas public universityDiplomas;
 
-    constructor (address[] memory _initialAdmins) {
+    constructor (string memory name, string memory symbol, address[] memory _initialAdmins) {
         for (uint i = 0; i < _initialAdmins.length; i++) {
             admins[_initialAdmins[i]] = true;
         }
-        universityDiplomas = new UniversityDiplomas();
+        universityDiplomas = new UniversityDiplomas(name, symbol);
     }
 
     modifier onlyAdmin (address _user) {
@@ -34,11 +34,11 @@ contract University {
         students[_encrCNP] = _student;
     }
 
-    function mintDiplomaFor(bytes32 _encrCNP) external onlyAdmin(msg.sender) {
-
+    function mintDiplomaFor(bytes32 encrCNP, UniversityDiplomas.DiplomaMetadata memory metadata) external onlyAdmin(msg.sender) {
+        universityDiplomas.mintDiploma(students[encrCNP], metadata);
     }
 
-    function getDiplomasOf(bytes32 _encrCNP) external {
-
+    function getDiplomasOf(bytes32 encrCNP) external view returns (UniversityDiplomas.DiplomaMetadata[] memory) {
+        return universityDiplomas.diplomasOwnedBy(students[encrCNP]);
     }
 }
