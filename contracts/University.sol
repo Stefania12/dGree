@@ -34,8 +34,8 @@ contract University {
         students[_encrCNP] = _student;
     }
 
-    function mintDiplomaFor(address student, UniversityDiplomas.DiplomaMetadata memory metadata) external onlyAdmin(msg.sender) {
-        universityDiplomas.mintDiploma(student, metadata);
+    function mintDiplomaFor(bytes32 encrCNP, UniversityDiplomas.DiplomaMetadata memory metadata) external onlyAdmin(msg.sender) {
+        universityDiplomas.mintDiploma(students[encrCNP], metadata);
     }
 
     function getDiplomasOf(bytes32 encrCNP) external view returns (UniversityDiplomas.DiplomaMetadata[] memory) {
