@@ -4,6 +4,10 @@ pragma solidity ^0.8.9;
 import "./UniversityDiplomas.sol";
 
 contract University {
+    event AdminAdded(address indexed _newAdmin, address _by);
+    event AdminDeleted(address indexed _oldAdmin, address _by);
+    event StudentETHAddressStored(bytes32 indexed _student, address _by);
+
     mapping(address => bool) public admins;
     mapping(bytes32 => address) private students;
 
@@ -23,15 +27,18 @@ contract University {
 
     function addAdmin (address _newAdmin) external onlyAdmin(msg.sender) {
         admins[_newAdmin] = true;
+        emit AdminAdded(_newAdmin, msg.sender);
     }
 
     function deleteAdmin (address _oldAdmin) external onlyAdmin(msg.sender) {
         require(admins[_oldAdmin], "Specified address is not a valid admin!");
         admins[_oldAdmin] = false;
+        emit AdminDeleted(_oldAdmin, msg.sender);
     }
 
     function storeStudentETHAddress (address _student, bytes32 _encrCNP) external onlyAdmin(msg.sender) {
         students[_encrCNP] = _student;
+        emit StudentETHAddressStored(_encrCNP, msg.sender);
     }
 
     function mintDiplomaFor(bytes32 encrCNP, UniversityDiplomas.DiplomaMetadata memory metadata) external onlyAdmin(msg.sender) {

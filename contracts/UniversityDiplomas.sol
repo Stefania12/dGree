@@ -6,6 +6,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract UniversityDiplomas is Ownable, ERC721 {
+    event DiplomaMinted(address indexed _student, address _by);
+
     using Counters for Counters.Counter;
 
     struct DiplomaMetadata {
@@ -30,6 +32,7 @@ contract UniversityDiplomas is Ownable, ERC721 {
         _ownedTokens[to].push(id);
 
         _tokenID.increment();
+        emit DiplomaMinted(to, tx.origin);
     }
 
     function diplomasOwnedBy(address owner) public view returns (DiplomaMetadata[] memory) {
